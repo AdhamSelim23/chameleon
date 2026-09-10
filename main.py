@@ -1,10 +1,13 @@
 from fastapi import FastAPI, File, UploadFile
 from fastapi.responses import FileResponse
+from pydantic import HttpUrl
 import uvicorn
-from vcompression.compress import compress_video
 import os
 from pathlib import Path
 import aiofiles
+
+from vcompression.compress import compress_video
+from vdownload.urldl import download_video as download_url
 
 app = FastAPI()
 
@@ -29,7 +32,22 @@ async def upload_file(file: UploadFile):
             await out_file.write(content)  # async write chunk
     compress_video(VIDEO_DIR / 'input.mp4', str(VIDEO_DIR / 'output.mp4'))
     file_path = str(VIDEO_DIR / 'output.mp4')
-    return FileResponse(file_path, media_type="vide/mp4", filename="output.mp4" )
+    return FileResponse(file_path, media_type="video/mp4", filename="output.mp4" )
+
+
+
+@app.post("/urltomp4",
+          response_class=FileResponse,
+          responses={
+              200: {
+                  "content": {"video/mp4": {}}
+              }
+          })
+async def url_to_mp4(url: HttpUrl):
+    out = download_url(str(url))
+    print(out, "######################################################################################################")
+    file_path = str(VIDEO_DIR / (str(out)+".mp4"))
+    return FileResponse(file_path, media_type="video/mp4", filename="download.mp4")
 
 
 if __name__ == '__main__':

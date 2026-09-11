@@ -1,7 +1,7 @@
-import Import from './components/Import.tsx'
+import ImportBtn from './components/ImportBtn.tsx'
 
 function App() {
-  return <div><Import /></div>
+  return <div><ImportBtn /></div>
 }
 
 export default App

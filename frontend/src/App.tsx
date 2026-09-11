@@ -1,4 +1,4 @@
-import Import from './Import'
+import Import from './components/Import.tsx'
 
 function App() {
   return <div><Import /></div>

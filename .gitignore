@@ -1,0 +1,5 @@
+venv/
+.venv/
+env/
+testing/
+testing_pdf/

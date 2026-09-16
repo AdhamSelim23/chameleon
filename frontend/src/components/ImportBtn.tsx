@@ -1,8 +1,12 @@
-import { useRef, useState } from "react";
+import { useRef } from "react";
 
-function ImportBtn() {
+type ImportBtnProps = {
+  selectedFile: File | null;
+  onFileSelected: (file: File | null) => void;
+};
+
+function ImportBtn({ selectedFile, onFileSelected }: ImportBtnProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   function openFilePicker() {
     fileInputRef.current?.click();
@@ -10,7 +14,7 @@ function ImportBtn() {
 
   function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0] ?? null;
-    setSelectedFile(file);
+    onFileSelected(file);
   }
 
   return (
@@ -18,7 +22,7 @@ function ImportBtn() {
       <button type="button" className="btn btn-primary" onClick={openFilePicker}>
         Import
       </button>
-      <input ref={fileInputRef} type="file" onChange={handleFileChange} hidden />
+      <input ref={fileInputRef} type="file" accept="video/*" onChange={handleFileChange} hidden />
       {selectedFile && <p>Selected file: {selectedFile.name}</p>}
     </>
   );

@@ -1,6 +1,11 @@
+import { useState } from "react";
+
 const API_URL = import.meta.env.VITE_API_URL ?? "http://127.0.0.1:8000";
 
-function DownloadBtn() {
+function Download() {
+  // same state thing as compress but for downloading
+  const [downloading, setDownloading] = useState(false);
+
   async function downloadVideo(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const url = new FormData(event.currentTarget).get("url");
@@ -8,6 +13,8 @@ function DownloadBtn() {
     if (typeof url !== "string" || !url.trim()) {
       return;
     }
+
+    setDownloading(true);
 
     try {
       const response = await fetch(`${API_URL}/urltomp4`, {
@@ -29,15 +36,29 @@ function DownloadBtn() {
       URL.revokeObjectURL(downloadUrl);
     } catch (error) {
       console.error(error);
+    } finally {
+      setDownloading(false);
     }
   }
 
   return (
     <form onSubmit={downloadVideo}>
       <input name="url" type="url" placeholder="Video URL" required />
-      <button type="submit" className="btn btn-secondary">Download video</button>
+      <button
+        type="submit"
+        className="btn btn-secondary"
+        disabled={downloading}
+      >
+        {downloading && (
+          <span
+            className="spinner-border spinner-border-sm me-2"
+            aria-hidden="true"
+          />
+        )}
+        {downloading ? "Downloading" : "Download video"}
+      </button>
     </form>
   );
 }
 
-export default DownloadBtn;
+export default Download;

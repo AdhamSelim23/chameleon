@@ -1,5 +1,4 @@
 from fastapi import FastAPI, File, UploadFile
-from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.openapi.utils import get_openapi
 from pydantic import HttpUrl
@@ -14,13 +13,6 @@ from pdf_edit.edit_pdf import merge_pdfs
 
 app = FastAPI()
 app.openapi_version = "3.0.2"
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 VIDEO_DIR = Path("testing")

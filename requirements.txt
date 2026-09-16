@@ -2,3 +2,4 @@ ffmpeg-python
 fastapi[standard]
 uv
 yt-dlp
+pypdf

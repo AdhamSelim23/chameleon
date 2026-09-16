@@ -2,7 +2,7 @@ import yt_dlp
 import uuid
 from pathlib import Path
 
-VIDEO_PATH = Path("testing")
+VIDEO_PATH = Path(__file__).resolve().parent.parent / "testing"
 
 def download_video(video_url):
     filename = f"{uuid.uuid4().hex}"

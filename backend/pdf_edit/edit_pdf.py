@@ -4,7 +4,7 @@ from os import listdir
 from os.path import isfile, join
 
 
-PDF_DIR = Path("testing_pdf")
+PDF_DIR = Path(__file__).resolve().parent.parent / "testing_pdf"
 
 
 def merge_pdfs(pdfs):

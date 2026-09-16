@@ -1,4 +1,5 @@
-from fastapi import FastAPI, File, UploadFile
+from fastapi import Body, FastAPI, File, UploadFile
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.openapi.utils import get_openapi
 from pydantic import HttpUrl
@@ -14,9 +15,21 @@ from pdf_edit.edit_pdf import merge_pdfs
 app = FastAPI()
 app.openapi_version = "3.0.2"
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-VIDEO_DIR = Path("testing")
-PDF_DIR = Path("testing_pdf")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+BASE_DIR = Path(__file__).resolve().parent
+VIDEO_DIR = BASE_DIR / "testing"
+PDF_DIR = BASE_DIR / "testing_pdf"
+PDF_DIR.mkdir(parents=True, exist_ok=True)
 
 def custom_openapi():
     if app.openapi_schema:
@@ -76,7 +89,7 @@ async def upload_file(file: UploadFile):
                   "content": {"video/mp4": {}}
               }
           })
-async def url_to_mp4(url: HttpUrl):
+async def url_to_mp4(url: HttpUrl = Body(...)):
     out = download_url(str(url))
     file_path = str(VIDEO_DIR / (str(out)+".mp4"))
     return FileResponse(file_path, media_type="video/mp4", filename="download.mp4")
@@ -95,7 +108,7 @@ async def merging(files: list[UploadFile] = File(...)):
     n = 0
     for file in files:
         merge_names.append(str(f"{n}.pdf"))
-        async with aiofiles.open(str(PDF_DIR / (str(n)+".pdf")), 'wb') as out_file:
+        async with aiofiles.open(PDF_DIR / f"{n}.pdf", 'wb') as out_file:
             while content := await file.read(1024):
                 await out_file.write(content)
         n += 1

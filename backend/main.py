@@ -26,9 +26,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-VIDEO_DIR = Path("testing")
-PDF_DIR = Path("testing_pdf")
+BASE_DIR = Path(__file__).resolve().parent
+VIDEO_DIR = BASE_DIR / "testing"
+PDF_DIR = BASE_DIR / "testing_pdf"
 PDF_DIR.mkdir(parents=True, exist_ok=True)
 
 def custom_openapi():

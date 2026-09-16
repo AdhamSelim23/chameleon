@@ -1,5 +1,5 @@
 venv/
 .venv/
 env/
-testing/
-testing_pdf/
+backend/testing/
+backend/testing_pdf/

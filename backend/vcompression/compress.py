@@ -3,7 +3,7 @@ import time
 from pathlib import Path
 import uuid
 
-VIDEOS_DIR = Path("testing")
+VIDEOS_DIR = Path(__file__).resolve().parent.parent / "testing"
 
 
 def compress_video(input , output_path, crf=23, preset='medium'):

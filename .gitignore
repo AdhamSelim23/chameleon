@@ -3,3 +3,4 @@ venv/
 env/
 backend/testing/
 backend/testing_pdf/
+__pycache__/
